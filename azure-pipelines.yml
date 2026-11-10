@@ -3,25 +3,31 @@ trigger:
 - main
 
 pool:
-Azure_Devpos
+  name: Azure_Devpos
 
 stages:
-  - stage: Terraform Validation and Security Scan
-    displayName: Validation
-    jobs:
-      - job: validation
-        steps:
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            backendAzureRmResourceGroupName: 'rg1'
-            backendAzureRmStorageAccountName: 'stoarge1q'
-            backendAzureRmContainerName: '$logs'
-            backendAzureRmKey: 'terraform.tfstate'
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'plan'
-            environmentServiceNameAzureRM: 'paperkey1'
+- stage: TerraformValidation
+  displayName: Terraform Validation
 
+  jobs:
+  - job: validation
+    displayName: Terraform Init and Plan
+
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: azurerm
+        command: init
+        backendServiceArm: paperkey1
+        backendAzureRmResourceGroupName: rg1
+        backendAzureRmStorageAccountName: stoarge1q
+        backendAzureRmContainerName: '$logs'
+        backendAzureRmKey: terraform.tfstate
+
+    - task: TerraformTask@5
+      displayName: Terraform Plan
+      inputs:
+        provider: azurerm
+        command: plan
+        environmentServiceNameAzureRM: paperkey1
