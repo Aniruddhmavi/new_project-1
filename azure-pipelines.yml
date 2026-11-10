@@ -11,14 +11,14 @@ stages:
 
   jobs:
   - job: validation
-    displayName: Terraform Init and Plan
-
     steps:
+
     - task: TerraformTask@5
       displayName: Terraform Init
       inputs:
         provider: azurerm
         command: init
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environment/Dev'
         backendServiceArm: paperkey1
         backendAzureRmResourceGroupName: rg1
         backendAzureRmStorageAccountName: stoarge1q
@@ -30,4 +30,5 @@ stages:
       inputs:
         provider: azurerm
         command: plan
+        workingDirectory: '$(System.DefaultWorkingDirectory)/environment/Dev'
         environmentServiceNameAzureRM: paperkey1
